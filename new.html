@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayan Tanjin Saleh — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::selection { background-color: #fde68a; color: #92400e; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-18px); }
+        }
+        @keyframes floatReverse {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-14px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.08); }
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-float-r { animation: floatReverse 5s ease-in-out infinite; }
+        .animate-glow { animation: pulse-glow 4s ease-in-out infinite; }
+        .fade-up { animation: fadeSlideUp 0.7s ease-out forwards; }
+
+        .glass-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 1.25rem;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .glass-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(6,182,212,0.3);
+            box-shadow: 0 20px 50px -12px rgba(0,0,0,0.5), 0 0 30px rgba(6,182,212,0.06);
+        }
+
+        .glass-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 0.75rem;
+            padding: 13px 16px;
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s;
+            width: 100%;
+            outline: none;
+        }
+        .glass-input:focus {
+            border-color: #06b6d4;
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 3px rgba(6,182,212,0.12);
+        }
+        .glass-input::placeholder { color: rgba(255,255,255,0.3); }
+
+        .tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(6,182,212,0.1);
+            color: #22d3ee;
+            border: 1px solid rgba(6,182,212,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0891b2, #0e7490);
+            color: #fff;
+            padding: 13px 30px;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(6,182,212,0.25);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #22d3ee;
+            padding: 13px 30px;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 2px solid rgba(6,182,212,0.35);
+            cursor: pointer;
+        }
+        .btn-outline:hover {
+            background: rgba(6,182,212,0.08);
+            border-color: #06b6d4;
+            transform: translateY(-2px);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            background: linear-gradient(135deg, #0891b2, #0e7490);
+            color: #fff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            z-index: 9999;
+            transform: translateY(120px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        ::-webkit-scrollbar { width: 7px; }
+        ::-webkit-scrollbar-track { background: #0c0a1d; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .service-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s;
+        }
+        .glass-card:hover .service-icon { transform: scale(1.1); }
+
+        .social-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(41,37,36,0.8);
+            border: 1px solid rgba(68,64,60,0.5);
+            transition: all 0.3s ease;
+            color: #a8a29e;
+        }
+        .social-icon svg {
+            fill: currentColor;
+        }
+        .social-icon:hover {
+            transform: translateY(-3px) scale(1.08);
+            background: rgba(6,182,212,0.15);
+            border-color: rgba(6,182,212,0.4);
+            color: #22d3ee;
+            box-shadow: 0 8px 20px rgba(6,182,212,0.15);
+        }
+    </style>
+</head>
+<body class="antialiased text-white" style="background:#0c0a1d;">
+
+    <!-- ========== NAVBAR ========== -->
+    <nav class="fixed top-0 left-0 right-0 z-50" style="background:rgba(12,10,29,0.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,0.05);">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm text-white" style="background:linear-gradient(135deg,#06b6d4,#7c3aed);">ST</div>
+                <span class="text-lg font-semibold tracking-tight">Sayan<span class="text-cyan-400">.</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#hero" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Home</a>
+                <a href="#about" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">About</a>
+                <a href="#services" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Services</a>
+                <a href="#contact" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Contact</a>
+            </div>
+            <a href="#contact" class="btn-primary !text-sm !py-2.5 !px-5">
+                Get in touch <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <button id="mobBtn" class="md:hidden text-white"><i data-lucide="menu" class="w-6 h-6"></i></button>
+        </div>
+        <div id="mobMenu" class="hidden md:hidden px-6 pb-4 space-y-2">
+            <a href="#hero" class="block text-sm text-slate-400 hover:text-white py-1.5">Home</a>
+            <a href="#about" class="block text-sm text-slate-400 hover:text-white py-1.5">About</a>
+            <a href="#services" class="block text-sm text-slate-400 hover:text-white py-1.5">Services</a>
+            <a href="#contact" class="block text-sm text-slate-400 hover:text-white py-1.5">Contact</a>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section id="hero" class="min-h-screen flex items-center relative overflow-hidden" style="background:linear-gradient(135deg,#0c0a1d 0%,#1a1145 50%,#0c0a1d 100%);">
+        <div class="absolute top-24 right-24 w-80 h-80 rounded-full animate-glow" style="background:radial-gradient(circle,rgba(6,182,212,0.12),transparent 70%);"></div>
+        <div class="absolute bottom-16 left-16 w-72 h-72 rounded-full animate-glow" style="background:radial-gradient(circle,rgba(124,58,237,0.1),transparent 70%);animation-delay:2s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full" style="background:radial-gradient(circle,rgba(6,182,212,0.04),transparent 70%);"></div>
+
+        <div class="max-w-7xl mx-auto px-6 w-full pt-24">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <div class="relative z-10 order-2 lg:order-1">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 fade-up" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);">
+                        <span class="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></span>
+                        <span class="text-cyan-400 text-sm font-medium">Available for Freelance</span>
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] tracking-tight mb-6 fade-up" style="animation-delay:0.1s;">
+                        Hi, I'm<br>
+                        <span style="background:linear-gradient(135deg,#22d3ee,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Sayan Tanjin</span><br>
+                        Saleh<span class="text-cyan-400">.</span>
+                    </h1>
+                    <p class="text-lg text-slate-400 leading-relaxed mb-8 max-w-lg fade-up" style="animation-delay:0.2s;">
+                        A passionate CSE student specializing in cybersecurity, web development, and creative design. Turning ideas into digital reality.
+                    </p>
+                    <div class="flex flex-wrap gap-4 mb-10 fade-up" style="animation-delay:0.3s;">
+                        <a href="#about" class="btn-primary">
+                            About me <i data-lucide="arrow-down-right" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#contact" class="btn-outline">
+                            Get in touch <i data-lucide="send" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative order-1 lg:order-2 flex justify-center lg:justify-end">
+                    <div class="relative">
+                        <div class="absolute -inset-3 rounded-3xl animate-glow" style="border:1px solid rgba(6,182,212,0.15);"></div>
+                        <div class="absolute -inset-7 rounded-3xl" style="border:1px solid rgba(6,182,212,0.07);"></div>
+                        <div class="relative w-72 h-80 sm:w-80 sm:h-96 lg:w-[380px] lg:h-[450px] rounded-2xl overflow-hidden shadow-2xl">
+                            <img src="hero.jpg" alt="Sayan Tanjin Saleh" class="w-full h-full object-cover">
+                            <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(12,10,29,0.7),transparent 50%);"></div>
+                        </div>
+                        <div class="absolute -left-8 top-1/4 p-3 rounded-xl shadow-xl animate-float" style="background:rgba(12,10,29,0.92);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:rgba(6,182,212,0.15);">
+                                    <i data-lucide="shield-check" class="w-5 h-5 text-cyan-400"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">Cybersecurity</p>
+                                    <p class="text-slate-500 text-xs">Expert</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute -right-6 bottom-1/4 p-3 rounded-xl shadow-xl animate-float-r" style="background:rgba(12,10,29,0.92);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:rgba(124,58,237,0.15);">
+                                    <i data-lucide="code-2" class="w-5 h-5 text-violet-400"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white font-semibold text-sm">Web Dev</p>
+                                    <p class="text-slate-500 text-xs">Specialist</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+            <span class="text-slate-600 text-xs tracking-widest uppercase">Scroll</span>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-600"></i>
+        </div>
+    </section>
+
+    <!-- ========== ABOUT + SERVICES ========== -->
+    <section id="about" class="py-24 lg:py-32 relative overflow-hidden" style="background:linear-gradient(180deg,#0c0a1d,#110e27);">
+        <div class="absolute top-0 right-0 w-96 h-96 rounded-full" style="background:radial-gradient(circle,rgba(124,58,237,0.06),transparent 70%);"></div>
+        <div class="absolute bottom-0 left-0 w-72 h-72 rounded-full" style="background:radial-gradient(circle,rgba(6,182,212,0.05),transparent 70%);"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-[2px] bg-cyan-400"></div>
+                <span class="text-cyan-400 text-sm font-medium uppercase tracking-wider">About Me</span>
+            </div>
+            <h2 class="text-4xl lg:text-5xl font-semibold tracking-tight mb-16">
+                My Story<span class="text-cyan-400">.</span>
+            </h2>
+
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+                <div>
+                    <div class="relative mb-8 rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="wall.jpg" alt="Workspace" class="w-full aspect-[5/3] object-cover">
+                        <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(12,10,29,0.6),transparent 60%);"></div>
+                        <div class="absolute bottom-4 right-4 w-12 h-12 rounded-xl flex items-center justify-center animate-float" style="background:rgba(12,10,29,0.8);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);">
+                            <i data-lucide="coffee" class="w-6 h-6 text-amber-400"></i>
+                        </div>
+                        <div class="absolute top-4 left-4 w-12 h-12 rounded-xl flex items-center justify-center animate-float-r" style="background:rgba(12,10,29,0.8);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);">
+                            <i data-lucide="laptop" class="w-6 h-6 text-cyan-400"></i>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold mb-5">
+                        A passionate <span class="text-cyan-400">CSE student</span> with a love for technology & security.
+                    </h3>
+                    <p class="text-slate-400 leading-relaxed mb-4">
+                        I'm Sayan Tanjin Saleh, a Computer Science & Engineering student who is deeply passionate about cybersecurity and web development. I believe in building digital experiences that are not only beautiful but also secure and functional.
+                    </p>
+                    <p class="text-slate-400 leading-relaxed mb-6">
+                        From exploring vulnerabilities in systems to crafting pixel-perfect websites, I bring a unique blend of security-first thinking and creative design to every project.
+                    </p>
+
+                    <div class="flex flex-wrap gap-2.5 mb-8">
+                        <span class="tag">🔒 Cybersecurity</span>
+                        <span class="tag">💻 Web Development</span>
+                        <span class="tag">🎨 Web Design</span>
+                        <span class="tag">🛡️ Pen Testing</span>
+                        <span class="tag">⚡ Frontend</span>
+                    </div>
+
+                    <div class="flex gap-8">
+                        <div>
+                            <p class="text-3xl font-semibold text-cyan-400">5+</p>
+                            <p class="text-slate-500 text-sm mt-1">Projects</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-semibold text-violet-400">3+</p>
+                            <p class="text-slate-500 text-sm mt-1">Services</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-semibold text-amber-400">100%</p>
+                            <p class="text-slate-500 text-sm mt-1">Dedication</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="services" class="space-y-6">
+                    <h3 class="text-xl font-semibold mb-2 text-slate-300">Services I Offer</h3>
+
+                    <div class="glass-card p-7 group">
+                        <div class="flex items-start gap-5">
+                            <div class="service-icon flex-shrink-0" style="background:rgba(6,182,212,0.1);">
+                                <i data-lucide="shield" class="w-6 h-6 text-cyan-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-semibold text-white mb-2 tracking-tight">Cybersecurity</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Protecting digital assets with security audits, vulnerability assessments, and penetration testing. I help identify and fix security flaws before they become threats.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-7 group">
+                        <div class="flex items-start gap-5">
+                            <div class="service-icon flex-shrink-0" style="background:rgba(124,58,237,0.1);">
+                                <i data-lucide="code-2" class="w-6 h-6 text-violet-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-semibold text-white mb-2 tracking-tight">Web Development</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Building responsive, fast, and functional websites using modern technologies. From front-end magic to back-end logic, I deliver complete web solutions.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-7 group">
+                        <div class="flex items-start gap-5">
+                            <div class="service-icon flex-shrink-0" style="background:rgba(245,158,11,0.1);">
+                                <i data-lucide="palette" class="w-6 h-6 text-amber-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-lg font-semibold text-white mb-2 tracking-tight">Web Design</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Creating visually stunning and user-friendly designs that captivate audiences. Every pixel is crafted with purpose to deliver exceptional user experiences.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="#contact" class="btn-primary w-full justify-center mt-4">
+                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        Let's Work Together
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="py-24 lg:py-32 relative overflow-hidden" style="background:linear-gradient(180deg,#110e27,#0c0a1d);">
+        <div class="absolute top-20 left-10 w-80 h-80 rounded-full" style="background:radial-gradient(circle,rgba(6,182,212,0.05),transparent 70%);"></div>
+        <div class="absolute bottom-20 right-10 w-64 h-64 rounded-full" style="background:radial-gradient(circle,rgba(124,58,237,0.05),transparent 70%);"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-[2px] bg-cyan-400"></div>
+                <span class="text-cyan-400 text-sm font-medium uppercase tracking-wider">Contact</span>
+            </div>
+            <h2 class="text-4xl lg:text-5xl font-semibold tracking-tight mb-6">
+                Contact Us<span class="text-cyan-400">.</span>
+            </h2>
+            <p class="text-slate-400 text-lg max-w-2xl mb-16">
+                Have a project in mind or want to collaborate? Feel free to reach out. I'd love to hear from you!
+            </p>
+
+            <div class="grid lg:grid-cols-5 gap-12 lg:gap-16">
+                <!-- ===== LEFT: Contact Info ===== -->
+                <div class="lg:col-span-2 space-y-7">
+                    <!-- Email -->
+                    <div class="flex items-start gap-4 group">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style="background:rgba(6,182,212,0.1);">
+                            <i data-lucide="mail" class="w-5 h-5 text-cyan-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm mb-1">Email</p>
+                            <a href="mailto:sayantanjin61@gmail.com" class="text-white font-medium hover:text-cyan-400 transition-colors text-sm">sayantanjin61@gmail.com</a>
+                        </div>
+                    </div>
+                    <!-- Phone -->
+                    <div class="flex items-start gap-4 group">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style="background:rgba(124,58,237,0.1);">
+                            <i data-lucide="phone" class="w-5 h-5 text-violet-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm mb-1">Phone</p>
+                            <a href="tel:+8801724990913" class="text-white font-medium hover:text-cyan-400 transition-colors text-sm">+880 1724990913</a>
+                        </div>
+                    </div>
+                    <!-- Location -->
+                    <div class="flex items-start gap-4 group">
+                        <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style="background:rgba(245,158,11,0.1);">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-amber-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-500 text-sm mb-1">Location</p>
+                            <p class="text-white font-medium text-sm">Bangladesh</p>
+                        </div>
+                    </div>
+
+                    <!-- Decorative terminal -->
+                    <div class="hidden lg:block rounded-xl p-5" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-500/60"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/60"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-500/60"></div>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="h-1.5 rounded w-3/4" style="background:rgba(6,182,212,0.15);"></div>
+                            <div class="h-1.5 rounded w-full" style="background:rgba(255,255,255,0.05);"></div>
+                            <div class="h-1.5 rounded w-5/6" style="background:rgba(255,255,255,0.05);"></div>
+                            <div class="h-1.5 rounded w-2/3" style="background:rgba(124,58,237,0.12);"></div>
+                        </div>
+                        <div class="mt-3 flex items-center gap-2">
+                            <span class="text-cyan-400 text-xs font-mono">$</span>
+                            <span class="text-slate-600 text-xs font-mono">ready_to_collaborate</span>
+                            <span class="w-2 h-3.5 bg-cyan-400 animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== RIGHT: Contact Form ===== -->
+                <div class="lg:col-span-3">
+                    <form id="contactForm" action="https://formsubmit.co/sayantanjin61@gmail.com" method="POST">
+                        <input type="hidden" name="_subject" value="New Contact — Sayan's Portfolio">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="box">
+                        <input type="text" name="_honey" style="display:none">
+
+                        <div class="space-y-5">
+                            <div class="grid sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="text-slate-300 text-sm font-medium mb-2 block">First Name</label>
+                                    <input type="text" name="first_name" placeholder="John" class="glass-input" required>
+                                </div>
+                                <div>
+                                    <label class="text-slate-300 text-sm font-medium mb-2 block">Last Name</label>
+                                    <input type="text" name="last_name" placeholder="Doe" class="glass-input" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-slate-300 text-sm font-medium mb-2 block">Email Address</label>
+                                <input type="email" name="email" placeholder="john@example.com" class="glass-input" required>
+                            </div>
+                            <div>
+                                <label class="text-slate-300 text-sm font-medium mb-2 block">Subject</label>
+                                <input type="text" name="subject" placeholder="Project Inquiry" class="glass-input" required>
+                            </div>
+                            <div>
+                                <label class="text-slate-300 text-sm font-medium mb-2 block">Message</label>
+                                <textarea name="message" rows="5" placeholder="Tell me about your project..." class="glass-input resize-none" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary w-full justify-center">
+                                <i data-lucide="send" class="w-5 h-5"></i>
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="border-t border-stone-800/50 py-8" style="background:#080619;">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-md flex items-center justify-center font-bold text-xs text-white" style="background:linear-gradient(135deg,#06b6d4,#7c3aed);">ST</div>
+                    <span class="text-sm text-stone-500">© 2025 Sayan Tanjin Saleh. All rights reserved.</span>
+                </div>
+                <div class="flex items-center gap-5">
+                    <a href="https://github.com/sayantanjin2005" class="social-icon !w-9 !h-9" title="GitHub">
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/sayan-tanjin-30382b2a7/" class="social-icon !w-9 !h-9" title="LinkedIn">
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <a href="https://web.facebook.com/omegasentinel" class="social-icon !w-9 !h-9" title="Facebook">
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/_sayan_tanjin/" class="social-icon !w-9 !h-9" title="Instagram">
+                        <svg viewBox="0 0 24 24" style="width:16px;height:16px;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">
+        <div class="flex items-center gap-3">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+            <span>Message sent successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        document.getElementById('mobBtn').addEventListener('click', () => {
+            document.getElementById('mobMenu').classList.toggle('hidden');
+        });
+        document.querySelectorAll('#mobMenu a').forEach(a => {
+            a.addEventListener('click', () => document.getElementById('mobMenu').classList.add('hidden'));
+        });
+
+        const form = document.getElementById('contactForm');
+        const toast = document.getElementById('toast');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fd = new FormData(form);
+            const btn = form.querySelector('button[type="submit"]');
+            const orig = btn.innerHTML;
+
+            btn.innerHTML = `<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Sending...`;
+            btn.disabled = true;
+
+            fetch(form.action, { method:'POST', body:fd, headers:{'Accept':'application/json'} })
+            .then(r => {
+                if(r.ok) { showToast("Message sent! I'll get back to you soon."); form.reset(); }
+                else showToast("Something went wrong. Please try again.");
+            })
+            .catch(() => showToast("Network error. Please check connection."))
+            .finally(() => { btn.innerHTML = orig; btn.disabled = false; lucide.createIcons(); });
+        });
+
+        function showToast(msg) {
+            toast.querySelector('span').textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 4000);
+        }
+
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if(e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.glass-card').forEach((c,i) => {
+            c.style.opacity = '0';
+            c.style.transform = 'translateY(24px)';
+            c.style.transition = `all 0.5s cubic-bezier(0.4,0,0.2,1) ${i*0.12}s`;
+            obs.observe(c);
+        });
+    </script>
+</body>
+</html>
